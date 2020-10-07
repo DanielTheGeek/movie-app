@@ -1,65 +1,62 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import React, { useState, useEffect, Component } from "react";
+import Layout from "../components/layout";
+import Carousel from "../components/carousel";
+import MovieList from "../components/movieList";
+import SideBar from "../components/sideBar";
+import { getMovies } from "../actions";
 
-export default function Home() {
-  return (
-    <div className={styles.container}>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+class Index extends Component {
+  static async getInitialProps() {
+    const movies = await getMovies();
 
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
+    return {
+      movies,
+    };
+  }
 
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
+  // constructor(props) {
+  //   super(props);
 
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
+  //   this.state = {
+  //     movies: [],
+  //     errorMessage: "",
+  //   };
+  // }
 
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
+  // Run only on client
+  // componentDidMount() {
+  //   getMovies()
+  //     .then((movies) => {
+  //       this.setState({ movies });
+  //     })
+  //     .catch((e) => {
+  //       this.setState({ errorMessage: e });
+  //     });
+  // }
 
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
+  render() {
+    const { movies } = this.props;
+    return (
+      <Layout>
+        <div className="row">
+          <div className="col-lg-3">
+            <SideBar appName="Movie DB" />
+          </div>
 
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
+          <div className="col-lg-9">
+            <Carousel />
+
+            {/* {errorMessage && (
+                  <div className="alert alert-danger" role="alert">
+                    {errorMessage}
+                  </div>
+                )} */}
+            <MovieList movies={movies} />
+          </div>
         </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
-    </div>
-  )
+      </Layout>
+    );
+  }
 }
+
+export default Index;
